@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vinhkhuc/JFastText.svg?branch=master)](https://travis-ci.org/vinhkhuc/JFastText)
+[![CI](https://github.com/michaelmior/JFastText/actions/workflows/ci.yml/badge.svg)](https://github.com/michaelmior/JFastText/actions/workflows/ci.yml)
 
 Table of Contents
 =================
