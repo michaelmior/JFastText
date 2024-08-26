@@ -1,13 +1,33 @@
 package com.github.jfasttext;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class JFastTextTest {
+    String modelPath;
+
+    @BeforeEach
+    void setUp() {
+        Path basePath;
+        if (System.getenv("GITHUB_WORKSPACE") != null) {
+            basePath = Paths.get(System.getenv("GITHUB_WORKSPACE"));
+        } else {
+            basePath = Paths.get(".");
+        }
+        Path localPath = Paths.get("src", "test", "resources", "models", "supervised.model.bin");
+        System.out.println("BASE");
+        System.out.println(basePath.toString());
+        System.out.println("LOCAL");
+        System.out.println(localPath.toString());
+        modelPath = basePath.resolve(localPath).toString();
+    }
 
     @Test
     public void test01TrainSupervisedCmd() {
@@ -49,7 +69,7 @@ public class JFastTextTest {
     @Test
     public void test04Predict() throws Exception {
         JFastText jft = new JFastText();
-        jft.loadModel("src/test/resources/models/supervised.model.bin");
+        jft.loadModel(modelPath);
         String text = "I like soccer";
         String predictedLabel = jft.predict(text);
         System.out.printf("\nText: '%s', label: '%s'\n", text, predictedLabel);
@@ -58,7 +78,7 @@ public class JFastTextTest {
     @Test
     public void test05PredictProba() throws Exception {
         JFastText jft = new JFastText();
-        jft.loadModel("src/test/resources/models/supervised.model.bin");
+        jft.loadModel(modelPath);
         String text = "What is the most popular sport in the US ?";
         JFastText.ProbLabel predictedProbLabel = jft.predictProba(text);
         System.out.printf("\nText: '%s', label: '%s', probability: %f\n",
@@ -68,7 +88,7 @@ public class JFastTextTest {
     @Test
     public void test06MultiPredictProba() throws Exception {
         JFastText jft = new JFastText();
-        jft.loadModel("src/test/resources/models/supervised.model.bin");
+        jft.loadModel(modelPath);
         String text = "Do you like soccer ?";
         System.out.printf("Text: '%s'\n", text);
         for (JFastText.ProbLabel predictedProbLabel: jft.predictProba(text, 2)) {
@@ -80,7 +100,7 @@ public class JFastTextTest {
     @Test
     public void test07GetVector() throws Exception {
         JFastText jft = new JFastText();
-        jft.loadModel("src/test/resources/models/supervised.model.bin");
+        jft.loadModel(modelPath);
         String word = "soccer";
         List<Float> vec = jft.getVector(word);
         System.out.printf("\nWord embedding vector of '%s': %s\n", word, vec);
@@ -93,7 +113,7 @@ public class JFastTextTest {
     public void test08ModelInfo() throws Exception {
         System.out.printf("\nSupervised model information:\n");
         JFastText jft = new JFastText();
-        jft.loadModel("src/test/resources/models/supervised.model.bin");
+        jft.loadModel(modelPath);
         System.out.printf("\tnumber of words = %d\n", jft.getNWords());
         System.out.printf("\twords = %s\n", jft.getWords());
         System.out.printf("\tlearning rate = %g\n", jft.getLr());
@@ -116,7 +136,7 @@ public class JFastTextTest {
     public void test09ModelUnloading() throws Exception {
         JFastText jft = new JFastText();
         System.out.println("\nLoading model ...");
-        jft.loadModel("src/test/resources/models/supervised.model.bin");
+        jft.loadModel(modelPath);
         System.out.println("Unloading model ...");
         jft.unloadModel();
     }
