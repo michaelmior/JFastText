@@ -22,10 +22,6 @@ public class JFastTextTest {
             basePath = Paths.get(".");
         }
         Path localPath = Paths.get("src", "test", "resources", "models", "supervised.model.bin");
-        System.out.println("BASE");
-        System.out.println(basePath.toString());
-        System.out.println("LOCAL");
-        System.out.println(localPath.toString());
         modelPath = basePath.resolve(localPath).toString();
     }
 
